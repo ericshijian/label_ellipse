@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 '''
 python label.py [imgdir]
 Usage:
@@ -30,6 +31,7 @@ filename = ""
 def onmouse(event, x, y, flags, param):
     global im
     global x1, y1, x2, y2
+    global x3, y3, x4, y4
     global x0, y0, a, b, angle
     global state
 
@@ -57,10 +59,10 @@ def onmouse(event, x, y, flags, param):
             state = 2 
 
             # compute angle
-            x0 = int((x1+x2)/2)
-            y0 = int((y1+y2)/2)
+            x0 = float((x1+x2)/2)
+            y0 = float((y1+y2)/2)
             if x1 != x2 and y1 != y2:
-                angle = math.atan((y1-y2)/(x1-x2))/math.pi * 180
+                angle = math.atan((float(y1)-float(y2))/(float(x1)-float(x2)))/math.pi * 180
             elif x1 != x2:
                 angle = 90
             elif y1 != y2:
@@ -75,22 +77,29 @@ def onmouse(event, x, y, flags, param):
         if event == cv2.EVENT_MOUSEMOVE:
             a = int(math.sqrt((x1-x2)**2 + (y1-y2)**2)/2)
             # compute Ax+By+1=0
-            A = (y1-y2)/(x1*y2-x2*y1)
-            B = -1*(x1-x2)/(x1*y2-x2*y1)
-            dist = abs(A*x + B*y + 1)/math.sqrt(A**2 + B**2)
+            
+            x1_f, y1_f, x2_f, y2_f = float(x1), float(y1), float(x2), float(y2) 
+            A = (y1_f-y2_f)/(x1_f * y2_f-x2_f * y1_f)
+            B = -1*(x1_f-x2_f)/(x1_f * y2_f-x2_f * y1_f)
+            dist = abs(A * x + B * y + 1)/math.sqrt(A ** 2 + B ** 2)
+           
             b = int(dist)
-            cv2.ellipse(img,(x0,y0),(a, b), angle, 0,360, (0,255,255))
+    
+
+            cv2.ellipse(img, (int(x0), int(y0)), (a, b), angle, 0,360, (0,255,255))
 
         if event == cv2.EVENT_LBUTTONDOWN:
             state = 3
 
     elif state == 3:
+
         cv2.line(img, (x1, y1), (x2, y2), (0,255,0), 2)
-        cv2.ellipse(img,(x0,y0),(a, b), angle, 0,360, (0,255,255))
+
+        cv2.ellipse(img,(int(x0), int(y0)),(a, b), angle, 0,360, (0,255,255))
 
 
     if x0 != 0 and y0 != 0:
-        cv2.ellipse(img,(x0,y0),(a, b), angle, 0,360, (0,255,255))
+        cv2.ellipse(img,(int(x0),int(y0)),(a, b), angle, 0,360, (0,255,255))
     cv2.imshow('img', img)
 
 def clear():
@@ -182,14 +191,17 @@ def load(xmlfile):
 
 def label(argv):
     root = os.path.abspath(argv[1])
-    if not os.path.exists(os.path.join(root, 'JPEGImages')):
-        print("Use https://github.com/DuinoDu/BBox-Label-Tool/blob/master/tools/createDS.py to convert images to voc-format")
-        return
+    #if not os.path.exists(os.path.join(root, 'JPEGImages')):
+    #    print("Use https://github.com/DuinoDu/BBox-Label-Tool/blob/master/tools/createDS.py to convert images to voc-format")
+    #    return
 
-    imgdir = os.path.join(root, 'JPEGImages')
+    #imgdir = os.path.join(root, 'JPEGImages')
+    
+    imgdir = root
     imgfiles = sorted([os.path.join(imgdir, x) for x in sorted(os.listdir(imgdir)) if x.endswith('.JPG') or x.endswith('.jpg')])
 
     annodir = os.path.join(root, 'Annotations')
+    
     if not os.path.exists(annodir):
         os.makedirs(annodir)
     

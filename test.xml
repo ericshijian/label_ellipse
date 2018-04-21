@@ -1,0 +1,31 @@
+<annotation>
+	<folder>FetalHead</folder>
+	<filename>00006744_张镜_5_L</filename>
+	<source>
+		<database>The VOC2007 Database</database>
+		<annotation>PASCAL VOC2007</annotation>
+		<image>flickr</image>
+		<flickrid>341012865</flickrid>
+	</source>
+	<size>
+		<width>384</width>
+		<height>317</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+        
+	<object>
+		<name>head</name>
+		<pose>Left</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+                        <x>201</x>
+                        <y>135</y>
+                        <a>133</a>
+                        <b>100</b>
+                        <angle>2</angle>
+		</bndbox>
+	</object>
+
+</annotation>
